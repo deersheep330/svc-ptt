@@ -76,3 +76,17 @@ class PttTrends():
         # sort title_word_freq
         self.title_word_freq = sorted(self.title_word_freq.items(), key=lambda x: x[1], reverse=True)
         print(self.title_word_freq)
+
+        # step 6-1
+        # aggregate word_freq and title_word_freq
+        self.aggregate_word_freq = {}
+        for item in self.word_freq + self.title_word_freq:
+            if item[0] in self.aggregate_word_freq:
+                self.aggregate_word_freq[item[0]] += item[1]
+            else:
+                self.aggregate_word_freq[item[0]] = item[1]
+
+        # step 6-2
+        # sort aggregate_word_freq
+        self.aggregate_word_freq = sorted(self.aggregate_word_freq.items(), key=lambda x: x[1], reverse=True)
+        print(self.aggregate_word_freq)
