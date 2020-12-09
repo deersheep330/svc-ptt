@@ -22,6 +22,11 @@ class PttTrends():
         # step 1
         # get stock symbols and names for constructing custom dict later
         resp = requests.get(f'http://{get_db_hostname()}:7777/stocks')
+        self.custom_dict = {}
+        self.reverse_custom_dict = {}
+        for ele in resp.json():
+            self.custom_dict[ele['symbol']] = ele['name']
+            self.reverse_custom_dict[ele['name']] = ele['symbol']
         #print(resp.json())
         self.custom_words = []
         for ele in resp.json():
@@ -90,3 +95,19 @@ class PttTrends():
         # sort aggregate_word_freq
         self.aggregate_word_freq = sorted(self.aggregate_word_freq.items(), key=lambda x: x[1], reverse=True)
         print(self.aggregate_word_freq)
+
+        # step 7
+        # normalize word freq
+        self.normalize_word_freq = {}
+        for item in self.aggregate_word_freq:
+            if item[0] in self.custom_dict:
+                if item[0] in self.normalize_word_freq:
+                    self.normalize_word_freq[item[0]] += item[1]
+                else:
+                    self.normalize_word_freq[item[0]] = item[1]
+            elif item[0] in self.reverse_custom_dict:
+                if self.reverse_custom_dict[item[0]] in self.normalize_word_freq:
+                    self.normalize_word_freq[self.reverse_custom_dict[item[0]]] += item[1]
+                else:
+                    self.normalize_word_freq[self.reverse_custom_dict[item[0]]] = item[1]
+        print(self.normalize_word_freq)
