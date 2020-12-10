@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  cron:
+    image: 127.0.0.1:5000/ptt_cron
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./ptt:/home/app/ptt
+      - ./main.py:/home/app/main.py
+
+networks:
+  default:
+    external:
+      name: svc-overlay-network
