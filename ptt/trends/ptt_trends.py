@@ -36,7 +36,7 @@ class PttTrends():
         # step 2
         # for removing meaningless words later
         # prevent them from being treated as stock symbols
-        self.excludes = ['2020', '2021', '2022', '2023', '2024', '2025', 'DDD', 'VVV']
+        self.excludes = ['2020', '2021', '2022', '2023', '2024', '2025', 'DDD', 'VVV', 'RRR', 'ALL']
 
         # step 3
         # parse ptt articles

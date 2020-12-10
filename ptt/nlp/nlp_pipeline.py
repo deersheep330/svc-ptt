@@ -10,7 +10,7 @@ class NlpPipeline(ABC):
         self.ner_list = None
         self.token_freq = None
         print('==> nlp pipeline init!')
-        self.special_words = ['GG', 'gg', '台GG', '台gg', '發哥', '99', '台積', '台積電', 'XD', 'XDD', 'XDDD', 'XDDDD', 'XDDDDD']
+        self.special_words = ['GG', 'gg', '台GG', '台gg', '發哥', '99', '台積', '台積電', 'XD', 'XDD', 'XDDD', 'XDDDD', 'XDDDDD', 'EPS']
 
     def set_custom_dict(self, *args):
         raise Exception('Not Implemented Yet')
