@@ -1,9 +1,11 @@
 from copy import deepcopy
+import socket
+import requests
 
 from ptt.nlp import JiebaPipeline
 from ptt.parser import PttParser
-import socket
-import requests
+from ptt.models import PttTrend
+from ptt.db import create_engine, start_session, insert
 
 def get_db_hostname():
     try:
@@ -57,7 +59,7 @@ class PttTrends():
             .keep_words_from_token_list(self.custom_words) \
             .count_tokens()
         self.word_freq = deepcopy(self.pipeline.token_freq)
-        print(self.word_freq)
+        #print(self.word_freq)
 
         # step 5-1
         # word freq for title only
@@ -80,7 +82,7 @@ class PttTrends():
         # step 5-3
         # sort title_word_freq
         self.title_word_freq = sorted(self.title_word_freq.items(), key=lambda x: x[1], reverse=True)
-        print(self.title_word_freq)
+        #print(self.title_word_freq)
 
         # step 6-1
         # aggregate word_freq and title_word_freq
@@ -94,9 +96,9 @@ class PttTrends():
         # step 6-2
         # sort aggregate_word_freq
         self.aggregate_word_freq = sorted(self.aggregate_word_freq.items(), key=lambda x: x[1], reverse=True)
-        print(self.aggregate_word_freq)
+        #print(self.aggregate_word_freq)
 
-        # step 7
+        # step 7-1
         # normalize word freq
         self.normalize_word_freq = {}
         for item in self.aggregate_word_freq:
@@ -110,4 +112,28 @@ class PttTrends():
                     self.normalize_word_freq[self.reverse_custom_dict[item[0]]] += item[1]
                 else:
                     self.normalize_word_freq[self.reverse_custom_dict[item[0]]] = item[1]
+
+        # step 7-2
+        # sort normalize word freq
+        self.normalize_word_freq = sorted(self.normalize_word_freq.items(), key=lambda x: x[1], reverse=True)
         print(self.normalize_word_freq)
+
+    def save_to_db(self):
+
+        engine = create_engine('mysql+pymysql', 'root', 'admin', get_db_hostname(), '3306', 'mydb')
+        session = start_session(engine)
+
+        for item in self.normalize_word_freq:
+            if item[1] < 10:
+                break
+            else:
+                _dict = {
+                    'symbol': item[0],
+                    'popularity': item[1]
+                }
+                try:
+                    insert(session, PttTrend, _dict)
+                except Exception as e:
+                    print(f'insert entry error: {e}')
+        session.commit()
+        session.close()
