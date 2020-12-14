@@ -1,21 +1,11 @@
 from copy import deepcopy
-import socket
 import requests
 
+from ptt.db.operations import get_api_hostname, get_db_hostname
 from ptt.nlp import JiebaPipeline
 from ptt.parser import PttParser
 from ptt.models import PttTrend
 from ptt.db import create_engine, start_session, insert
-
-def get_db_hostname():
-    try:
-        socket.gethostbyname('db')
-        print(f'db hostname = db')
-        return 'db'
-    except Exception as e:
-        print(f'gethostbyname(\'db\') failed: {e}')
-        print(f'db hostname = localhost')
-        return 'localhost'
 
 class PttTrends():
 
@@ -23,7 +13,7 @@ class PttTrends():
 
         # step 1
         # get stock symbols and names for constructing custom dict later
-        resp = requests.get(f'http://{get_db_hostname()}:7777/stocks')
+        resp = requests.get(f'http://{get_api_hostname()}:7777/stocks')
         self.custom_dict = {}
         self.reverse_custom_dict = {}
         for ele in resp.json():

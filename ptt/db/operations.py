@@ -1,9 +1,31 @@
+import socket
+
 from sqlalchemy.dialects.mysql import insert as __insert
 from sqlalchemy import create_engine as __create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects import postgresql, mysql
 
 from ..db import Base
+
+def get_db_hostname():
+    try:
+        socket.gethostbyname('db')
+        print(f'db hostname = db')
+        return 'db'
+    except Exception as e:
+        print(f'gethostbyname(\'db\') failed: {e}')
+        print(f'db hostname = localhost')
+        return 'localhost'
+
+def get_api_hostname():
+    try:
+        socket.gethostbyname('api')
+        print(f'api hostname = api')
+        return 'api'
+    except Exception as e:
+        print(f'gethostbyname(\'api\') failed: {e}')
+        print(f'api hostname = localhost')
+        return 'localhost'
 
 def create_engine(adapter, user, password, host, port, database):
     create_engine.adapter = adapter
