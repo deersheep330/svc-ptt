@@ -1,11 +1,10 @@
 from copy import deepcopy
 import requests
 
-from ptt.db.operations import get_api_hostname, get_db_hostname
 from ptt.nlp import JiebaPipeline
 from ptt.parser import PttParser
 from ptt.models import PttTrend
-from ptt.db import create_engine, start_session, insert
+from ptt.db import create_engine, start_session, insert, get_api_hostname, get_db_hostname
 
 class PttTrends():
 
