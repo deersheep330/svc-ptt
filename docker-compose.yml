@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./ptt:/home/app/ptt
+      - ./api:/home/app/api
       - ./main.py:/home/app/main.py
 
 networks:
