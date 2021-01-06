@@ -13,5 +13,5 @@ docker stack deploy -c docker-compose.yml ptt
 ```
 #### uninstall all pip packages
 ```
-pip uninstall -r requirements.txt
+pip uninstall -y -r requirements.txt
 ```
